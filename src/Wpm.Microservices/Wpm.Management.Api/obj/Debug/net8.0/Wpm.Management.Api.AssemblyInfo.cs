@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Wpm.Management.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c927ba44732a83ccb9a86c97c2559daec1df11cc")]
 [assembly: System.Reflection.AssemblyProductAttribute("Wpm.Management.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Wpm.Management.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,4 +1,8 @@
 
+using Microsoft.EntityFrameworkCore;
+using System;
+using Wpm.Management.Api.DataAccess;
+
 namespace Wpm.Management.Api
 {
     public class Program
@@ -14,7 +18,15 @@ namespace Wpm.Management.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // Configure EF Core to use an InMemory database.
+            // This is used for development/demo purposes and does not require a real DB server.
+            builder.Services.AddDbContext<ManagementDbContext>( options =>
+            {
+                options.UseInMemoryDatabase("WpmManagement");
+            });
+
             var app = builder.Build();
+            app.EnsureDbIsCreated();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

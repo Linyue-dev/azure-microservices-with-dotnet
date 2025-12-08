@@ -1,0 +1,31 @@
+# Visual Studio cache files
+.vs/
+.vscode/
+
+# Build output
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+
+# ASP.NET / EF Core
+appsettings.Development.json
+Migrations/
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+project.assets.json
+packages.lock.json
+
+# Others
+node_modules/
+wwwroot/
