@@ -48,6 +48,31 @@ namespace Wpm.Management.Api.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError);
             }
         }
+
+        [HttpPost("{id}")]
+        public async Task<IActionResult> Update(PetUpdate petUpdate)
+        {
+            try
+            {
+                var pet = await _dbContext.Pets.FindAsync();
+                if (pet == null)
+                {
+                    return NotFound();
+                }
+
+                pet.Name = petUpdate.Name;
+                pet.Age = petUpdate.Age;
+                pet.BreedId = petUpdate.BreedId;
+                await _dbContext.SaveChangesAsync();
+
+                return Ok(pet);
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex.ToString());
+                return StatusCode((int)HttpStatusCode.InternalServerError);
+            }
+        }
     }
 }
 public record NewPet(string Name, int Age, int BreedId)
@@ -57,3 +82,5 @@ public record NewPet(string Name, int Age, int BreedId)
         return new Pet() { Name = Name, Age = Age, BreedId = BreedId };
     }
 }
+public record PetUpdate(string Name, int Age, int BreedId);
+

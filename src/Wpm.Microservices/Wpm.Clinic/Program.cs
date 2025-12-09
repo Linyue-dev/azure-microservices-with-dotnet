@@ -19,6 +19,7 @@ namespace Wpm.Clinic
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddMemoryCache(); // DI memory cache
             builder.Services.AddScoped<ManagementService>();
             builder.Services.AddScoped<ClinicApplicationService>();
             builder.Services.AddDbContext<ClinicDbContext>(options =>
@@ -41,18 +42,14 @@ namespace Wpm.Clinic
                 });
             });
 
-
             var app = builder.Build();
 
             // Seed in-memory DB
             app.EnsureClinicDbIsCreated();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+            // Enable swagger always (Prod + Dev)
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseHttpsRedirection();
 

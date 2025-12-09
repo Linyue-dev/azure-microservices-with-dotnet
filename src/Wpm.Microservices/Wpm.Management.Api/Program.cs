@@ -30,16 +30,9 @@ namespace Wpm.Management.Api
             // Seed in-memory DB
             app.EnsureDbIsCreated();
 
-            //// Enable swagger always (Prod + Dev)
-            //app.UseSwagger();
-            //app.UseSwaggerUI();
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+            // Enable swagger always (Prod + Dev)
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             // This is safe. Azure supports HTTPS.
             app.UseHttpsRedirection();
