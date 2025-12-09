@@ -49,12 +49,12 @@ namespace Wpm.Management.Api.Controllers
             }
         }
 
-        [HttpPost("{id}")]
-        public async Task<IActionResult> Update(PetUpdate petUpdate)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, PetUpdate petUpdate)
         {
             try
             {
-                var pet = await _dbContext.Pets.FindAsync();
+                var pet = await _dbContext.Pets.FindAsync(id);
                 if (pet == null)
                 {
                     return NotFound();
