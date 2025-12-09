@@ -12,8 +12,8 @@ namespace Wpm.Management.Api
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             builder.Services.AddControllers();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -26,19 +26,18 @@ namespace Wpm.Management.Api
             });
 
             var app = builder.Build();
+
+            // Seed in-memory DB
             app.EnsureDbIsCreated();
 
-            // Configure the HTTP request pipeline.
-            //if (app.Environment.IsDevelopment())
-            //{
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            //}
+            // Enable swagger always (Prod + Dev)
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
-            //app.UseHttpsRedirection();
+            // This is safe. Azure supports HTTPS.
+            app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

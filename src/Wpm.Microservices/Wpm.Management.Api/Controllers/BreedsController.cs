@@ -7,18 +7,25 @@ namespace Wpm.Management.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class BreedsController(ManagementDbContext dbContext, Logger<BreedsController> logger) : Controller
+    public class BreedsController: ControllerBase
     {
+        private readonly ManagementDbContext _dbContext;
+        private readonly ILogger<BreedsController> _logger;
+        public BreedsController(ManagementDbContext dbContext, ILogger<BreedsController> logger)
+        { 
+            _dbContext = dbContext;
+            _logger = logger;
+        }
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var all = dbContext.Breeds.ToListAsync();
+            var all = await _dbContext.Breeds.ToListAsync();
             return all != null ? Ok(all) : NotFound();
         }
         [HttpGet("{id}", Name = nameof(GetBreedById))]
         public async Task<IActionResult> GetBreedById(int id)
         {
-            var breed = await dbContext.Breeds.FindAsync(id);
+            var breed = await _dbContext.Breeds.FindAsync(id);
             return breed != null ? Ok(breed) : NotFound();
         }
 
@@ -28,13 +35,13 @@ namespace Wpm.Management.Api.Controllers
             try
             {
                 var breed = newBreed.ToBreed();
-                await dbContext.Breeds.AddAsync(breed);
-                await dbContext.SaveChangesAsync();
+                await _dbContext.Breeds.AddAsync(breed);
+                await _dbContext.SaveChangesAsync();
                 return CreatedAtRoute(nameof(GetBreedById), new { id = breed.Id }, newBreed);
             }
             catch (Exception ex)
             {
-                logger.LogError(ex.ToString());
+                _logger.LogError(ex.ToString());
                 return StatusCode((int)HttpStatusCode.InternalServerError);
             }
         }
