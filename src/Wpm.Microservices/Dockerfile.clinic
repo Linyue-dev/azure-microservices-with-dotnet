@@ -1,0 +1,27 @@
+# Build stage
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+# Copy csproj and restore
+COPY ["Wpm.Clinic/Wpm.Clinic.csproj", "Wpm.Clinic/"]
+RUN dotnet restore "Wpm.Clinic/Wpm.Clinic.csproj"
+
+# Copy all and build
+COPY . .
+WORKDIR "/src/Wpm.Clinic"
+RUN dotnet build "Wpm.Clinic.csproj" -c Release -o /app/build
+
+# Publish stage
+FROM build AS publish
+RUN dotnet publish "Wpm.Clinic.csproj" -c Release -o /app/publish
+
+# Runtime stage
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+WORKDIR /app
+
+# Azure Container Apps default port
+ENV ASPNETCORE_URLS=http://0.0.0.0:8080
+EXPOSE 8080
+
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Wpm.Clinic.dll"]
