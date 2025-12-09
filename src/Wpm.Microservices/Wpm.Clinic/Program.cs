@@ -1,4 +1,9 @@
 
+using Microsoft.EntityFrameworkCore;
+using Wpm.Clinic.Application;
+using Wpm.Clinic.DataAccess;
+using Wpm.Clinic.ExternalServices;
+
 namespace Wpm.Clinic
 {
     public class Program
@@ -13,8 +18,23 @@ namespace Wpm.Clinic
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddScoped<ManagementService>();
+            builder.Services.AddScoped<ClinicApplicationService>();
+            builder.Services.AddDbContext<ClinicDbContext>(options =>
+            {
+                options.UseInMemoryDatabase("WpmClinic");
+            });
+
+            builder.Services.AddHttpClient<ManagementService>(client =>
+            {
+                var uri = builder.Configuration.GetValue<string>("Wpm:ManagementUri");
+                client.BaseAddress = new Uri(uri);
+            });
 
             var app = builder.Build();
+
+            // Seed in-memory DB
+            app.EnsureClinicDbIsCreated();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -26,7 +46,6 @@ namespace Wpm.Clinic
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
