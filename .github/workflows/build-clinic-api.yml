@@ -1,0 +1,34 @@
+name: Build and Push Clinic API
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.WPMMANAGEMENTAPI_AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.WPMMANAGEMENTAPI_AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.WPMMANAGEMENTAPI_AZURE_SUBSCRIPTION_ID }}
+
+      - name: Build and push Clinic image
+        working-directory: ./src/Wpm.Microservices
+        run: |
+          # Login to ACR
+          az acr login --name wpmregistryservice
+
+          # Build image
+          docker build -f Dockerfile.clinic -t wpmregistryservice.azurecr.io/wpm.clinic.api:latest .
+
+          # Push image
+          docker push wpmregistryservice.azurecr.io/wpm.clinic.api:latest
