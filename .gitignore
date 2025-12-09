@@ -1,10 +1,11 @@
-# Visual Studio cache files
+# Visual Studio cache
 .vs/
 .vscode/
 
 # Build output
 bin/
 obj/
+out/
 
 # User-specific files
 *.user
@@ -14,9 +15,11 @@ obj/
 
 # Logs
 *.log
+*.tlog
 
-# ASP.NET / EF Core
+# ASP.NET Core specific
 appsettings.Development.json
+appsettings.*.json
 Migrations/
 
 # NuGet
@@ -26,6 +29,9 @@ packages/
 project.assets.json
 packages.lock.json
 
+# Azure publish profiles
+Properties/PublishProfiles/
+
 # Others
-node_modules/
 wwwroot/
+node_modules/

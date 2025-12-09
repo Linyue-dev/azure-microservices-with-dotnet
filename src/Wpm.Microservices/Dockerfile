@@ -18,7 +18,11 @@ RUN dotnet publish "Wpm.Management.Api.csproj" -c Release -o /app/publish
 # Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
+
+# IMPORTANT: Azure Container Apps expects your app to listen on port 8080
+ENV ASPNETCORE_URLS=http://0.0.0.0:8080
+
 EXPOSE 8080
-EXPOSE 8081
+
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Wpm.Management.Api.dll"]
