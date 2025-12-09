@@ -5,7 +5,7 @@ using Wpm.Clinic.DataAccess;
 namespace Wpm.Clinic.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ConsultationController : ControllerBase
     {
         private readonly ClinicDbContext _dbContext;
@@ -22,7 +22,7 @@ namespace Wpm.Clinic.Controllers
             _applicationService = applicationService;
         }
 
-        [HttpPost("start")]
+        [HttpPost("/start")]
         public async Task<IActionResult> Start(StartConsultationCommand command)
         {
             var result = await _applicationService.Handle(command);

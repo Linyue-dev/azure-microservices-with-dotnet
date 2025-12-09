@@ -1,5 +1,6 @@
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Http.Resilience;
+using Polly;
 using Wpm.Clinic.Application;
 using Wpm.Clinic.DataAccess;
 using Wpm.Clinic.ExternalServices;
@@ -27,9 +28,19 @@ namespace Wpm.Clinic
 
             builder.Services.AddHttpClient<ManagementService>(client =>
             {
-                var uri = builder.Configuration.GetValue<string>("Wpm:ManagementUri");
+                var uri = builder.Configuration["Wpm:ManagementUri"];
                 client.BaseAddress = new Uri(uri);
+            })
+            .AddResilienceHandler("management-pipeline", pipeline =>
+            {
+                pipeline.AddRetry(new Polly.Retry.RetryStrategyOptions<HttpResponseMessage>
+                {
+                    BackoffType = DelayBackoffType.Exponential,
+                    MaxRetryAttempts = 3,
+                    Delay = TimeSpan.FromSeconds(2),
+                });
             });
+
 
             var app = builder.Build();
 
